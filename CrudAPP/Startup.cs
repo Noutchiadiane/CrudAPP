@@ -1,7 +1,9 @@
+using CrudAPP.Configurations;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -38,6 +40,9 @@ namespace CrudAPP
                 .AllowAnyHeader()
                );
             });
+            services.AddDbContext<DAL.RabbitmqContext>(opts =>
+                 opts.UseSqlServer(Configuration.GetConnectionString("sqlConnection")));
+            services.AddAutoMapper(typeof(MapperInitilizer));
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "CrudAPP", Version = "v1" });
