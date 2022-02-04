@@ -1,4 +1,5 @@
 using CrudAPP.Configurations;
+using CrudAPP.DAL.Repositries.Base;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -43,10 +44,14 @@ namespace CrudAPP
             services.AddDbContext<DAL.RabbitmqContext>(opts =>
                  opts.UseSqlServer(Configuration.GetConnectionString("sqlConnection")));
             services.AddAutoMapper(typeof(MapperInitilizer));
+            services.AddTransient<IUnitOfWork, UnitOfWork>();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "CrudAPP", Version = "v1" });
             });
+            services.AddControllers().AddNewtonsoftJson(op =>
+                op.SerializerSettings.ReferenceLoopHandling =
+                    Newtonsoft.Json.ReferenceLoopHandling.Ignore);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
